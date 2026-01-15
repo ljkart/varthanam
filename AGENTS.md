@@ -16,6 +16,56 @@ Codex MUST:
 
 ---
 
+## Product Context — Varthanam
+
+Varthanam is a **personal news and content aggregation platform**.
+
+### Purpose
+
+- Aggregate news, blogs, and research sources into a single, clean dashboard
+- Reduce information overload by letting users explicitly control sources and topics
+- Deliver relevant content through **user-defined rules**, not opaque algorithms
+
+### Core Capabilities
+
+- RSS feed aggregation
+- User-defined collections (folders of feeds)
+- Clean, distraction-free reading experience
+- Per-user read / unread and saved state
+- Conditional aggregation via rules:
+  - keyword-based
+  - collection-scoped
+  - scheduled execution
+
+### Key Differentiator
+
+- **Rule-based, user-controlled discovery**
+- No ranking or recommendations unless explicitly defined by the user
+- Predictable, explainable behavior at all times
+
+### Target Users
+
+- Knowledge workers
+- Founders and researchers
+- Users who want intentional, controllable information intake
+
+### Explicit Non-Goals (Important Constraints)
+
+- This is NOT a social network
+- This is NOT an ad-driven recommendation engine
+- This is NOT a real-time chat or commenting platform
+- Avoid AI summaries, generative rewriting, or personalization unless explicitly planned later
+
+### Guiding Principles
+
+- Clarity over cleverness
+- User control over automation
+- Explicit rules over hidden heuristics
+
+Codex must keep these product constraints in mind when designing APIs, data models, and workflows.
+
+---
+
 ## Project Stack
 
 - Backend: FastAPI (Python)
