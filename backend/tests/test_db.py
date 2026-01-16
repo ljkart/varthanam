@@ -11,11 +11,11 @@ def test_engine_created_from_settings() -> None:
         environment="test",
         log_level="INFO",
         database_url="sqlite+pysqlite:///:memory:",
-        jwt_secret="test-secret",
-        jwt_access_token_exp_minutes=60,
+        jwt_secret_key="test-secret",
+        jwt_access_token_expire_minutes=60,
     )
 
-    engine = get_engine(settings)
+    engine = get_engine(settings.database_url)
 
     assert engine.url.render_as_string(hide_password=False) == settings.database_url
 
@@ -27,8 +27,8 @@ def test_db_session_dependency_closes_session() -> None:
         environment="test",
         log_level="INFO",
         database_url="sqlite+pysqlite:///:memory:",
-        jwt_secret="test-secret",
-        jwt_access_token_exp_minutes=60,
+        jwt_secret_key="test-secret",
+        jwt_access_token_expire_minutes=60,
     )
 
     session_generator = get_db_session(settings)

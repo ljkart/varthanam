@@ -18,16 +18,16 @@ from app.core.settings import Settings, get_app_settings
 
 
 @lru_cache(maxsize=1)
-def get_engine(settings: Settings) -> Engine:
-    """Create a SQLAlchemy engine from application settings.
+def get_engine(database_url: str) -> Engine:
+    """Create a SQLAlchemy engine for the provided database URL.
 
     Args:
-        settings: Application settings with the database URL.
+        database_url: SQLAlchemy database URL.
 
     Returns:
         Engine: SQLAlchemy engine configured for the given database URL.
     """
-    return create_engine(settings.database_url, future=True)
+    return create_engine(database_url, future=True)
 
 
 def get_session_factory(settings: Settings) -> sessionmaker[Session]:
@@ -39,7 +39,11 @@ def get_session_factory(settings: Settings) -> sessionmaker[Session]:
     Returns:
         sessionmaker[Session]: Factory for creating new database sessions.
     """
-    return sessionmaker(bind=get_engine(settings), autoflush=False, autocommit=False)
+    return sessionmaker(
+        bind=get_engine(settings.database_url),
+        autoflush=False,
+        autocommit=False,
+    )
 
 
 def get_db_session(
