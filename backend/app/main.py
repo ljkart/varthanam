@@ -1,6 +1,6 @@
 """FastAPI application entrypoint."""
 
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
@@ -23,8 +23,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title=resolved_settings.app_name)
     register_exception_handlers(app)
-    app.include_router(health_router)
-    app.include_router(auth_router)
+
+    api_router = APIRouter(prefix="/api/v1")
+    api_router.include_router(health_router)
+    api_router.include_router(auth_router)
+    app.include_router(api_router)
+
+    # Deprecated: keep legacy routes temporarily while clients migrate.
+    app.include_router(health_router, include_in_schema=False)
+    app.include_router(auth_router, include_in_schema=False)
     app.state.settings = resolved_settings
     return app
 
