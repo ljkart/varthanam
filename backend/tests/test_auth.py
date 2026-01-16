@@ -47,7 +47,7 @@ def test_register_success_returns_user() -> None:
     client = create_test_client()
 
     response = client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={"email": "user@example.com", "password": "secure-password"},
     )
 
@@ -63,10 +63,10 @@ def test_register_duplicate_email_fails() -> None:
     client = create_test_client()
 
     payload = {"email": "dup@example.com", "password": "secure-password"}
-    response = client.post("/auth/register", json=payload)
+    response = client.post("/api/v1/auth/register", json=payload)
     assert response.status_code == 201
 
-    response = client.post("/auth/register", json=payload)
+    response = client.post("/api/v1/auth/register", json=payload)
 
     assert response.status_code == 409
 
@@ -76,9 +76,9 @@ def test_login_success_returns_token() -> None:
     client = create_test_client()
 
     payload = {"email": "login@example.com", "password": "secure-password"}
-    client.post("/auth/register", json=payload)
+    client.post("/api/v1/auth/register", json=payload)
 
-    response = client.post("/auth/login", json=payload)
+    response = client.post("/api/v1/auth/login", json=payload)
 
     assert response.status_code == 200
     token_payload = response.json()
@@ -91,11 +91,11 @@ def test_login_wrong_password_fails() -> None:
     client = create_test_client()
 
     client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={"email": "wrong@example.com", "password": "secure-password"},
     )
     response = client.post(
-        "/auth/login",
+        "/api/v1/auth/login",
         json={"email": "wrong@example.com", "password": "bad-password"},
     )
 
@@ -103,24 +103,27 @@ def test_login_wrong_password_fails() -> None:
 
 
 def test_me_requires_token() -> None:
-    """The /auth/me endpoint should require a bearer token."""
+    """The /api/v1/auth/me endpoint should require a bearer token."""
     client = create_test_client()
 
-    response = client.get("/auth/me")
+    response = client.get("/api/v1/auth/me")
 
     assert response.status_code == 401
 
 
 def test_me_returns_current_user() -> None:
-    """The /auth/me endpoint should return the authenticated user."""
+    """The /api/v1/auth/me endpoint should return the authenticated user."""
     client = create_test_client()
 
     payload = {"email": "me@example.com", "password": "secure-password"}
-    client.post("/auth/register", json=payload)
-    login_response = client.post("/auth/login", json=payload)
+    client.post("/api/v1/auth/register", json=payload)
+    login_response = client.post("/api/v1/auth/login", json=payload)
     token = login_response.json()["access_token"]
 
-    response = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+    response = client.get(
+        "/api/v1/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
 
     assert response.status_code == 200
     user_payload = response.json()

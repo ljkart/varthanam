@@ -52,7 +52,10 @@ def test_validation_error_returns_standard_response() -> None:
     """Validation errors should map to the standard error schema."""
     client = TestClient(create_test_app())
 
-    response = client.post("/auth/register", json={"email": "invalid@example.com"})
+    response = client.post(
+        "/api/v1/auth/register",
+        json={"email": "invalid@example.com"},
+    )
 
     assert response.status_code == 422
     payload = response.json()
@@ -66,11 +69,11 @@ def test_http_exception_returns_standard_response() -> None:
     client = TestClient(create_test_app())
 
     client.post(
-        "/auth/register",
+        "/api/v1/auth/register",
         json={"email": "user@example.com", "password": "secure-password"},
     )
     response = client.post(
-        "/auth/login",
+        "/api/v1/auth/login",
         json={"email": "user@example.com", "password": "wrong-password"},
     )
 
@@ -91,7 +94,7 @@ def test_unhandled_exception_returns_safe_500() -> None:
     app.dependency_overrides[get_current_user] = override_current_user
     client = TestClient(app, raise_server_exceptions=False)
 
-    response = client.get("/auth/me")
+    response = client.get("/api/v1/auth/me")
 
     assert response.status_code == 500
     payload = response.json()
