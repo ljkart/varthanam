@@ -26,8 +26,8 @@ def create_test_client() -> TestClient:
         environment="test",
         log_level="INFO",
         database_url="sqlite+pysqlite://",
-        jwt_secret="test-secret",
-        jwt_access_token_exp_minutes=60,
+        jwt_secret_key="test-secret",
+        jwt_access_token_expire_minutes=60,
     )
     app = create_app(settings=settings)
 

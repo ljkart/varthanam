@@ -10,7 +10,6 @@ from passlib.context import CryptContext
 from app.core.settings import Settings
 
 _PWD_CONTEXT = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
-_JWT_ALGORITHM = "HS256"
 
 
 def get_password_hash(password: str) -> str:
@@ -50,9 +49,13 @@ def create_access_token(settings: Settings, *, subject: str, email: str) -> str:
         str: Encoded JWT access token.
     """
     now = datetime.now(tz=UTC)
-    expires_at = now + timedelta(minutes=settings.jwt_access_token_exp_minutes)
+    expires_at = now + timedelta(minutes=settings.jwt_access_token_expire_minutes)
     payload = {"sub": subject, "email": email, "iat": now, "exp": expires_at}
-    return jwt.encode(payload, settings.jwt_secret, algorithm=_JWT_ALGORITHM)
+    return jwt.encode(
+        payload,
+        settings.jwt_secret_key.get_secret_value(),
+        algorithm=settings.jwt_algorithm,
+    )
 
 
 def decode_access_token(settings: Settings, token: str) -> dict[str, object]:
@@ -68,4 +71,8 @@ def decode_access_token(settings: Settings, token: str) -> dict[str, object]:
     Raises:
         jwt.PyJWTError: If the token is invalid or expired.
     """
-    return jwt.decode(token, settings.jwt_secret, algorithms=[_JWT_ALGORITHM])
+    return jwt.decode(
+        token,
+        settings.jwt_secret_key.get_secret_value(),
+        algorithms=[settings.jwt_algorithm],
+    )
