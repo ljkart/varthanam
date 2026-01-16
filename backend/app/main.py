@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 
+from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
 from app.core.settings import Settings, get_settings
 from app.routers.auth import router as auth_router
@@ -21,6 +22,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging(resolved_settings)
 
     app = FastAPI(title=resolved_settings.app_name)
+    register_exception_handlers(app)
     app.include_router(health_router)
     app.include_router(auth_router)
     app.state.settings = resolved_settings
