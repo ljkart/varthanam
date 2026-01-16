@@ -204,7 +204,9 @@ From `frontend/`:
 ## 8) “Definition of Done” Checklist
 
 - [ ] Tests added/updated
+- [ ] All backend tests pass locally using `uv run pytest -q`
 - [ ] Docstrings/comments added where needed
 - [ ] Lint/format passes (pre-commit)
 - [ ] CI passes
-- [ ] PR description complete (template)
+- [ ] PR description created using the repository PR template (Markdown)
+- [ ] TASKS.md updated to reflect completed tasks
