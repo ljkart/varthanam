@@ -24,3 +24,4 @@ pnpm-debug.log*
 # OS/editor
 .DS_Store
 *.swp
+.cache/

@@ -14,6 +14,7 @@ class Settings:
     app_name: str
     environment: str
     log_level: str
+    database_url: str
 
 
 @lru_cache
@@ -28,4 +29,5 @@ def get_settings() -> Settings:
         app_name=os.getenv("APP_NAME", "Varthanam API"),
         environment=os.getenv("APP_ENVIRONMENT", "development"),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
+        database_url=os.getenv("DATABASE_URL", "sqlite+pysqlite:///./varthanam.db"),
     )
