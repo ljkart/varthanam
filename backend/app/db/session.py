@@ -8,11 +8,13 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from functools import lru_cache
+from typing import Annotated
 
+from fastapi import Depends
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.core.settings import Settings, get_settings
+from app.core.settings import Settings, get_app_settings
 
 
 @lru_cache(maxsize=1)
@@ -40,17 +42,18 @@ def get_session_factory(settings: Settings) -> sessionmaker[Session]:
     return sessionmaker(bind=get_engine(settings), autoflush=False, autocommit=False)
 
 
-def get_db_session(settings: Settings | None = None) -> Generator[Session, None, None]:
+def get_db_session(
+    settings: Annotated[Settings, Depends(get_app_settings)],
+) -> Generator[Session, None, None]:
     """Provide a database session dependency for FastAPI.
 
     Args:
-        settings: Optional settings override for tests or alternate configs.
+        settings: Application settings to build the session factory.
 
     Yields:
         Session: SQLAlchemy session scoped to the caller.
     """
-    resolved_settings = settings or get_settings()
-    session_factory = get_session_factory(resolved_settings)
+    session_factory = get_session_factory(settings)
     session = session_factory()
     try:
         yield session

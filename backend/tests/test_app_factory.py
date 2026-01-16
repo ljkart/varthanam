@@ -11,6 +11,8 @@ def test_create_app_uses_settings() -> None:
         environment="test",
         log_level="INFO",
         database_url="sqlite+pysqlite:///:memory:",
+        jwt_secret="test-secret",
+        jwt_access_token_exp_minutes=60,
     )
 
     app = create_app(settings=settings)

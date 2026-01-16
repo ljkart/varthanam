@@ -13,6 +13,8 @@ dependencies = [
     "uvicorn>=0.40.0",
     "psycopg>=3.3.2",
     "passlib[bcrypt]>=1.7.4",
+    "PyJWT>=2.8.0",
+    "pydantic[email]>=2.12.5",
 ]
 
 [dependency-groups]
