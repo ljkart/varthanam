@@ -22,6 +22,7 @@ if str(BACKEND_ROOT) not in sys.path:
 
 from app.core.settings import get_settings  # noqa: E402
 from app.db.base import Base  # noqa: E402
+from app.models import user  # noqa: E402,F401
 
 settings = get_settings()
 # Keep migrations aligned with app settings to avoid duplicating DB URLs.
