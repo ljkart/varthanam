@@ -51,10 +51,10 @@ Status: ✅ COMPLETE
 
 ### Models
 
-- [ ] Collection
-- [ ] Feed
-- [ ] CollectionFeed
-- [ ] Article
+- [x] Collection
+- [x] Feed
+- [x] CollectionFeed
+- [x] Article
 
 ### Endpoints
 
@@ -70,7 +70,7 @@ Status: ✅ COMPLETE
 - [ ] Article fetching & storage
 - [ ] Deduplication strategy (GUID / URL hash)
 
-Status: ⏳ NOT STARTED
+Status: 🚧 IN PROGRESS
 
 ---
 
