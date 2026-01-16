@@ -67,6 +67,7 @@ jobs:
   frontend:
     name: Frontend (Next.js)
     runs-on: ubuntu-latest
+    if: ${{ hashFiles('frontend/package.json') != '' }}
 
     steps:
       - name: Checkout
