@@ -9,7 +9,7 @@ from app.db.base import Base
 from app.models.article import Article
 from app.models.collection import Collection
 from app.models.collection_feed import CollectionFeed
-from app.models.feed import Feed
+from app.models.feed import Feed, normalize_url
 from app.models.user import User
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.exc import IntegrityError
@@ -100,7 +100,7 @@ def test_article_dedup_key_prefers_guid() -> None:
             feed_id=feed.id,
             title="Article",
             url="https://example.com/article",
-            guid="guid-123",
+            guid=" GUID-123 ",
         )
         session.add(article)
         session.commit()
@@ -122,13 +122,14 @@ def test_article_dedup_key_falls_back_to_url() -> None:
         article = Article(
             feed_id=feed.id,
             title="Article",
-            url="https://example.com/article",
+            url="HTTPS://Example.com/Article/",
             guid=None,
         )
         session.add(article)
         session.commit()
 
-        expected_key = hashlib.sha256(b"https://example.com/article").hexdigest()
+        normalized_url = normalize_url("HTTPS://Example.com/Article/")
+        expected_key = hashlib.sha256(normalized_url.encode("utf-8")).hexdigest()
         assert article.dedup_key == expected_key
     finally:
         session.close()

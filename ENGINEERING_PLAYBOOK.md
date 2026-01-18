@@ -205,6 +205,7 @@ From `frontend/`:
 
 - [ ] Tests added/updated
 - [ ] All backend tests pass locally using `uv run pytest -q`
+- [ ] Run `uv run pre-commit run --all-files` and fixes all errors if any
 - [ ] Docstrings/comments added where needed
 - [ ] Lint/format passes (pre-commit)
 - [ ] CI passes
