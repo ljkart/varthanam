@@ -45,8 +45,6 @@ Status: ✅ COMPLETE
 - [x] Standardized API error handling
 - [x] API versioning (`/api/v1`)
 
----
-
 ## Phase 2 — Core Aggregation (Feeds, Collections, Articles)
 
 ### Models
@@ -58,7 +56,7 @@ Status: ✅ COMPLETE
 
 ### Endpoints
 
-- [ ] CRUD collections
+- [x] CRUD collections
 - [ ] Add & validate RSS feed
 - [ ] Assign feed to collection
 - [ ] Collection merged articles list
