@@ -2,13 +2,23 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db_session
 from app.models.user import User
-from app.schemas.collections import CollectionCreate, CollectionRead, CollectionUpdate
+from app.schemas.collections import (
+    CollectionCreate,
+    CollectionFeedCreate,
+    CollectionFeedRead,
+    CollectionRead,
+    CollectionUpdate,
+)
 from app.services.auth import get_current_user
+from app.services.collection_feeds import (
+    assign_feed_to_collection,
+    unassign_feed_from_collection,
+)
 from app.services.collections import (
     create_collection,
     delete_collection,
@@ -115,3 +125,59 @@ def delete_collection_route(
         CollectionRead: Deleted collection.
     """
     return delete_collection(session, current_user, collection_id)
+
+
+@router.post(
+    "/{collection_id}/feeds",
+    response_model=CollectionFeedRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def assign_feed_to_collection_route(
+    collection_id: int,
+    assignment_in: CollectionFeedCreate,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    response: Response,
+) -> CollectionFeedRead:
+    """Assign a feed to a collection owned by the authenticated user.
+
+    Args:
+        collection_id: Collection identifier to attach the feed to.
+        assignment_in: Payload containing the feed identifier.
+        session: Database session dependency.
+        current_user: Authenticated user.
+        response: Response object for adjusting status codes.
+
+    Returns:
+        CollectionFeedRead: Relationship payload for the assignment.
+    """
+    link, created = assign_feed_to_collection(
+        session,
+        current_user,
+        collection_id,
+        assignment_in.feed_id,
+    )
+    if not created:
+        response.status_code = status.HTTP_200_OK
+    return link
+
+
+@router.delete(
+    "/{collection_id}/feeds/{feed_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def unassign_feed_from_collection_route(
+    collection_id: int,
+    feed_id: int,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+) -> None:
+    """Remove a feed assignment from a collection owned by the user.
+
+    Args:
+        collection_id: Collection identifier to detach from.
+        feed_id: Feed identifier to remove.
+        session: Database session dependency.
+        current_user: Authenticated user.
+    """
+    unassign_feed_from_collection(session, current_user, collection_id, feed_id)
