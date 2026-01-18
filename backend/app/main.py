@@ -7,6 +7,7 @@ from app.core.logging import configure_logging
 from app.core.settings import Settings, get_settings
 from app.routers.auth import router as auth_router
 from app.routers.collections import router as collections_router
+from app.routers.feeds import router as feeds_router
 from app.routers.health import router as health_router
 
 
@@ -29,12 +30,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     api_router.include_router(health_router)
     api_router.include_router(auth_router)
     api_router.include_router(collections_router)
+    api_router.include_router(feeds_router)
     app.include_router(api_router)
 
     # Deprecated: keep legacy routes temporarily while clients migrate.
     app.include_router(health_router, include_in_schema=False)
     app.include_router(auth_router, include_in_schema=False)
     app.include_router(collections_router, include_in_schema=False)
+    app.include_router(feeds_router, include_in_schema=False)
     app.state.settings = resolved_settings
     return app
 
