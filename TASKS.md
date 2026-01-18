@@ -65,8 +65,8 @@ Status: ✅ COMPLETE
 
 ### Background Processing
 
-- [ ] Article fetching & storage
-- [ ] Deduplication strategy (GUID / URL hash)
+- [x] Article fetching & storage
+- [x] Deduplication strategy (GUID / URL hash)
 
 Status: 🚧 IN PROGRESS
 

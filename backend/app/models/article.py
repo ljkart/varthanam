@@ -18,13 +18,26 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
+from app.models.feed import normalize_url
+
+
+def _normalize_dedup_source(guid: str | None, url: str | None) -> str | None:
+    """Normalize GUID/URL sources before hashing for deterministic deduplication."""
+    if guid is not None:
+        normalized_guid = guid.strip().lower()
+        if normalized_guid:
+            return normalized_guid
+    if url is not None:
+        return normalize_url(url.strip())
+    return None
 
 
 def compute_dedup_key(guid: str | None, url: str | None) -> str:
     """Compute a stable deduplication key from guid or url."""
-    source = guid or url
+    source = _normalize_dedup_source(guid, url)
     if not source:
         raise ValueError("Article requires guid or url to compute dedup_key.")
+    # Hashing normalized identifiers keeps dedup deterministic across fetch runs.
     return hashlib.sha256(source.encode("utf-8")).hexdigest()
 
 
