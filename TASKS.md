@@ -57,8 +57,8 @@ Status: ✅ COMPLETE
 ### Endpoints
 
 - [x] CRUD collections
-- [ ] Add & validate RSS feed
-- [ ] Assign feed to collection
+- [x] Add & validate RSS feed
+- [x] Assign feed to collection
 - [ ] Collection merged articles list
   - pagination
   - sorting

@@ -31,3 +31,18 @@ class CollectionRead(BaseModel):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class CollectionFeedCreate(BaseModel):
+    """Input payload for assigning a feed to a collection."""
+
+    feed_id: int = Field(..., ge=1)
+
+
+class CollectionFeedRead(BaseModel):
+    """Relationship fields returned for collection feed assignments."""
+
+    collection_id: int
+    feed_id: int
+
+    model_config = {"from_attributes": True}

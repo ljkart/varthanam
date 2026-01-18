@@ -17,6 +17,7 @@ dependencies = [
     "pydantic[email]>=2.12.5",
     "pydantic-settings>=2.2.1",
     "psycopg2>=2.9.11",
+    "feedparser>=6.0.12",
 ]
 
 [dependency-groups]
