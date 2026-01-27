@@ -15,10 +15,12 @@ from app.schemas.collections import (
     CollectionRead,
     CollectionUpdate,
 )
+from app.schemas.feeds import FeedRead
 from app.services.auth import get_current_user
 from app.services.collection_articles import list_collection_articles
 from app.services.collection_feeds import (
     assign_feed_to_collection,
+    list_collection_feeds,
     unassign_feed_from_collection,
 )
 from app.services.collections import (
@@ -168,6 +170,28 @@ def list_collection_articles_route(
         limit=limit,
         offset=offset,
     )
+
+
+@router.get(
+    "/{collection_id}/feeds",
+    response_model=list[FeedRead],
+)
+def list_collection_feeds_route(
+    collection_id: int,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+) -> list[FeedRead]:
+    """List all feeds assigned to a collection.
+
+    Args:
+        collection_id: Collection identifier.
+        session: Database session dependency.
+        current_user: Authenticated user.
+
+    Returns:
+        list[FeedRead]: Feeds assigned to the collection, ordered by title.
+    """
+    return list_collection_feeds(session, current_user, collection_id)
 
 
 @router.post(
