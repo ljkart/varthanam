@@ -2,11 +2,12 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db_session
 from app.models.user import User
+from app.schemas.articles import PaginatedArticlesResponse
 from app.schemas.collections import (
     CollectionCreate,
     CollectionFeedCreate,
@@ -15,6 +16,7 @@ from app.schemas.collections import (
     CollectionUpdate,
 )
 from app.services.auth import get_current_user
+from app.services.collection_articles import list_collection_articles
 from app.services.collection_feeds import (
     assign_feed_to_collection,
     unassign_feed_from_collection,
@@ -125,6 +127,47 @@ def delete_collection_route(
         CollectionRead: Deleted collection.
     """
     return delete_collection(session, current_user, collection_id)
+
+
+@router.get(
+    "/{collection_id}/articles",
+    response_model=PaginatedArticlesResponse,
+)
+def list_collection_articles_route(
+    collection_id: int,
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    limit: int = Query(default=20, ge=1, le=100, description="Max items per page"),
+    offset: int = Query(default=0, ge=0, description="Items to skip"),
+) -> PaginatedArticlesResponse:
+    """List articles from all feeds in a collection with pagination.
+
+    Returns a merged list of articles from all feeds assigned to the collection,
+    sorted by published_at descending (nulls last), with created_at as tie-breaker.
+
+    Args:
+        collection_id: Collection identifier.
+        session: Database session dependency.
+        current_user: Authenticated user.
+        limit: Maximum items to return (1-100, default 20).
+        offset: Number of items to skip (default 0).
+
+    Returns:
+        PaginatedArticlesResponse: Articles with pagination metadata.
+    """
+    articles, total = list_collection_articles(
+        session,
+        current_user,
+        collection_id,
+        limit=limit,
+        offset=offset,
+    )
+    return PaginatedArticlesResponse(
+        items=articles,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.post(
