@@ -82,7 +82,7 @@ Status: ✅ COMPLETE
 
 - [x] Mark read / unread
 - [x] Save / unsave
-- [ ] Filters:
+- [x] Filters:
   - unread-only
   - saved-only
 
@@ -90,7 +90,7 @@ Status: ✅ COMPLETE
 
 - [ ] Reader-mode content extraction
 
-Status: 🚧 IN PROGRESS
+Status: ✅ COMPLETE
 
 ---
 

@@ -139,11 +139,25 @@ def list_collection_articles_route(
     current_user: CurrentUserDep,
     limit: int = Query(default=20, ge=1, le=100, description="Max items per page"),
     offset: int = Query(default=0, ge=0, description="Items to skip"),
+    unread_only: bool = Query(
+        default=False,
+        description="Filter to only unread articles (no state row or is_read=false)",
+    ),
+    saved_only: bool = Query(
+        default=False,
+        description="Filter to only saved articles (is_saved=true)",
+    ),
 ) -> PaginatedArticlesResponse:
-    """List articles from all feeds in a collection with pagination.
+    """List articles from all feeds in a collection with pagination and filters.
 
     Returns a merged list of articles from all feeds assigned to the collection,
     sorted by published_at descending (nulls last), with created_at as tie-breaker.
+
+    Filter behavior:
+    - unread_only=true: Returns articles with no state row (treated as unread)
+      or is_read=false.
+    - saved_only=true: Returns articles with is_saved=true.
+    - Both filters: Returns intersection (unread AND saved).
 
     Args:
         collection_id: Collection identifier.
@@ -151,6 +165,8 @@ def list_collection_articles_route(
         current_user: Authenticated user.
         limit: Maximum items to return (1-100, default 20).
         offset: Number of items to skip (default 0).
+        unread_only: Filter for unread articles only (default false).
+        saved_only: Filter for saved articles only (default false).
 
     Returns:
         PaginatedArticlesResponse: Articles with pagination metadata.
@@ -161,6 +177,8 @@ def list_collection_articles_route(
         collection_id,
         limit=limit,
         offset=offset,
+        unread_only=unread_only,
+        saved_only=saved_only,
     )
     return PaginatedArticlesResponse(
         items=articles,
