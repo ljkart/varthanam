@@ -98,8 +98,8 @@ Status: ✅ COMPLETE
 
 ### Models
 
-- [ ] Rule
-- [ ] RuleMatch
+- [x] Rule
+- [x] RuleMatch
 
 ### API
 
@@ -115,7 +115,7 @@ Status: ✅ COMPLETE
   - collection scope
   - time window since `last_run_at`
 
-Status: ⏳ NOT STARTED
+Status: 🚧 IN PROGRESS
 
 ---
 
