@@ -59,7 +59,7 @@ Status: ✅ COMPLETE
 - [x] CRUD collections
 - [x] Add & validate RSS feed
 - [x] Assign feed to collection
-- [ ] Collection merged articles list
+- [x] Collection merged articles list
   - pagination
   - sorting
 
@@ -68,7 +68,7 @@ Status: ✅ COMPLETE
 - [x] Article fetching & storage
 - [x] Deduplication strategy (GUID / URL hash)
 
-Status: 🚧 IN PROGRESS
+Status: ✅ COMPLETE
 
 ---
 
@@ -76,12 +76,12 @@ Status: 🚧 IN PROGRESS
 
 ### Models
 
-- [ ] UserArticleState
+- [x] UserArticleState
 
 ### Endpoints
 
-- [ ] Mark read / unread
-- [ ] Save / unsave
+- [x] Mark read / unread
+- [x] Save / unsave
 - [ ] Filters:
   - unread-only
   - saved-only
@@ -90,7 +90,7 @@ Status: 🚧 IN PROGRESS
 
 - [ ] Reader-mode content extraction
 
-Status: ⏳ NOT STARTED
+Status: 🚧 IN PROGRESS
 
 ---
 
