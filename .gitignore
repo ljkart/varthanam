@@ -26,3 +26,8 @@ pnpm-debug.log*
 *.swp
 .cache/
 .env
+
+# ai agents
+.claude
+.claudeignore
+.codexignore
