@@ -111,3 +111,39 @@ def unassign_feed_from_collection(
 
     session.delete(existing)
     session.commit()
+
+
+def list_collection_feeds(
+    session: Session,
+    user: User,
+    collection_id: int,
+) -> list[Feed]:
+    """List all feeds assigned to a collection.
+
+    Args:
+        session: Database session for queries.
+        user: Authenticated user requesting feeds.
+        collection_id: Collection identifier.
+
+    Returns:
+        List of Feed objects assigned to the collection, ordered by title.
+
+    Raises:
+        HTTPException: If the collection is not found or not owned by the user.
+    """
+    # Verify ownership - raises 404 if not found or not owned
+    get_collection(session, user, collection_id)
+
+    # Query feeds via CollectionFeed join
+    feeds = (
+        session.execute(
+            select(Feed)
+            .join(CollectionFeed, Feed.id == CollectionFeed.feed_id)
+            .where(CollectionFeed.collection_id == collection_id)
+            .order_by(Feed.title.asc())
+        )
+        .scalars()
+        .all()
+    )
+
+    return list(feeds)
