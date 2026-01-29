@@ -201,11 +201,12 @@ From `frontend/`:
 
 ---
 
-## 8) “Definition of Done” Checklist
+## 8) "Definition of Done" Checklist
 
 - [ ] Tests added/updated
 - [ ] All backend tests pass locally using `uv run pytest -q`
 - [ ] Run `uv run pre-commit run --all-files` and fixes all errors if any
+- [ ] If task involves database changes: run migrations with `ENV=dev DATABASE_URL="postgresql+psycopg2://postgres:postgres@localhost:5432/varthanam" JWT_SECRET_KEY="change-me" uv run alembic upgrade head`
 - [ ] Docstrings/comments added where needed
 - [ ] Lint/format passes (pre-commit)
 - [ ] CI passes

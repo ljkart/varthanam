@@ -25,13 +25,13 @@ def upgrade() -> None:
         sa.Column(
             "is_read",
             sa.Boolean(),
-            server_default=sa.text("0"),
+            server_default=sa.text("false"),
             nullable=False,
         ),
         sa.Column(
             "is_saved",
             sa.Boolean(),
-            server_default=sa.text("0"),
+            server_default=sa.text("false"),
             nullable=False,
         ),
         sa.Column("read_at", sa.DateTime(timezone=True), nullable=True),
