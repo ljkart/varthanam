@@ -353,8 +353,8 @@ class TestRunRuleCollectionScope:
         finally:
             session.close()
 
-    def test_unscoped_rule_matches_all_articles(self):
-        """Rule without collection_id matches articles from all feeds."""
+    def test_unscoped_rule_matches_all_user_articles(self):
+        """Rule without collection_id matches articles from all user's collections."""
         session = create_test_session()
         try:
             user = create_user(session, "unscoped@example.com")
@@ -392,6 +392,50 @@ class TestRunRuleCollectionScope:
             assert len(matches) == 2
             assert article1.id in matched_ids
             assert article2.id in matched_ids
+        finally:
+            session.close()
+
+    def test_unscoped_rule_does_not_match_other_users_articles(self):
+        """Unscoped rule should NOT match articles from other users' collections."""
+        session = create_test_session()
+        try:
+            user1 = create_user(session, "user1@example.com")
+            user2 = create_user(session, "user2@example.com")
+
+            # User 1's feed and collection
+            feed1 = create_feed(session, "https://user1.com/feed.xml", "User1 Feed")
+            collection1 = create_collection(session, user1, "User1 Collection")
+            link_feed_to_collection(session, collection1, feed1)
+            article1 = create_article(
+                session, feed1, "Python for User1", summary="Python article"
+            )
+
+            # User 2's feed and collection
+            feed2 = create_feed(session, "https://user2.com/feed.xml", "User2 Feed")
+            collection2 = create_collection(session, user2, "User2 Collection")
+            link_feed_to_collection(session, collection2, feed2)
+            _article2 = create_article(
+                session, feed2, "Python for User2", summary="Python article"
+            )
+
+            # User 1's unscoped rule - should only match user1's articles
+            rule = create_rule(
+                session,
+                user1,
+                "User1 Python",
+                include_keywords="python",
+                collection_id=None,
+            )
+
+            result = run_rule(rule.id, session)
+
+            matches = session.query(RuleMatch).filter_by(rule_id=rule.id).all()
+            matched_ids = {m.article_id for m in matches}
+
+            # Should only match user1's article, not user2's
+            assert len(matches) == 1
+            assert article1.id in matched_ids
+            assert result.candidates == 1  # Only user1's article is a candidate
         finally:
             session.close()
 

@@ -24,9 +24,8 @@ Candidate Selection
 -------------------
 - Collection-scoped rules: Query articles whose feed_id is in the feeds
   linked to the collection via CollectionFeed.
-- Unscoped rules: Currently queries ALL articles in the system.
-  Note: For a multi-tenant system, this should be restricted to articles
-  from feeds the user has access to. This is documented as a limitation.
+- Unscoped rules: Query articles from feeds in ALL collections owned by
+  the rule's user (rule.user_id). This ensures per-user isolation.
 """
 
 from __future__ import annotations
@@ -39,6 +38,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.article import Article
+from app.models.collection import Collection
 from app.models.collection_feed import CollectionFeed
 from app.models.rule import Rule
 from app.models.rule_match import RuleMatch
@@ -81,13 +81,8 @@ def _get_candidate_articles(
     Candidate Selection Logic:
     - If rule.collection_id is set: Only articles from feeds linked to
       that collection via CollectionFeed.
-    - If rule.collection_id is None: All articles in the system.
-
-    Note on unscoped rules:
-    Currently, unscoped rules scan ALL articles. In a multi-tenant system,
-    this should be restricted to articles from feeds the user owns or has
-    access to. This is acceptable for MVP but should be revisited for
-    production with many users.
+    - If rule.collection_id is None: Articles from feeds in ALL collections
+      owned by rule.user_id (ensures per-user isolation).
 
     Args:
         session: Database session.
@@ -101,16 +96,23 @@ def _get_candidate_articles(
         feed_ids_query = select(CollectionFeed.feed_id).where(
             CollectionFeed.collection_id == rule.collection_id
         )
-        feed_ids = session.execute(feed_ids_query).scalars().all()
-
-        if not feed_ids:
-            return []
-
-        # Get articles from those feeds
-        articles_query = select(Article).where(Article.feed_id.in_(feed_ids))
     else:
-        # Unscoped: all articles (see docstring for limitations)
-        articles_query = select(Article)
+        # Unscoped: get feed_ids from ALL collections owned by the rule's user
+        # This ensures per-user isolation in multi-tenant environments
+        user_collection_ids = select(Collection.id).where(
+            Collection.user_id == rule.user_id
+        )
+        feed_ids_query = select(CollectionFeed.feed_id).where(
+            CollectionFeed.collection_id.in_(user_collection_ids)
+        )
+
+    feed_ids = session.execute(feed_ids_query).scalars().all()
+
+    if not feed_ids:
+        return []
+
+    # Get articles from those feeds
+    articles_query = select(Article).where(Article.feed_id.in_(feed_ids))
 
     return list(session.execute(articles_query).scalars().all())
 

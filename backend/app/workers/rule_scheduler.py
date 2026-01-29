@@ -186,6 +186,9 @@ def run_due_rules(now: datetime, session: Session) -> RunDueRulesResult:
                 "Scheduled rule failed",
                 extra={"rule_id": rule.id, "rule_name": rule.name},
             )
+            # Rollback to clear any failed transaction state (e.g., IntegrityError)
+            # This keeps the session usable for subsequent rules
+            session.rollback()
             # Continue to next rule - don't let one failure stop others
 
     logger.info(
