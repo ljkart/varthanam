@@ -115,11 +115,14 @@ Status: ✅ COMPLETE
 
 ### Workers
 
-- [ ] Rule execution task (`run_rule`)
+- [x] Rule execution task (`run_rule`)
+  - `app/workers/rule_runner.py`: Core job function
+  - Idempotent via unique constraint check
+  - Collection scope support
+  - Updates `last_run_at` after run
+  - 11 unit tests covering edge cases
 - [ ] Scheduling via `frequency_minutes`
-- [ ] Rule matching integration:
-  - collection scope
-  - time window since `last_run_at`
+- [ ] Time window filtering since `last_run_at`
 
 Status: 🚧 IN PROGRESS
 
