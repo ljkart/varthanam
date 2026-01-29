@@ -103,7 +103,7 @@ Status: ✅ COMPLETE
 
 ### API
 
-- [ ] Rule CRUD endpoints
+- [x] Rule CRUD endpoints
 
 ### Workers
 

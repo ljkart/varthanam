@@ -10,6 +10,7 @@ from app.routers.auth import router as auth_router
 from app.routers.collections import router as collections_router
 from app.routers.feeds import router as feeds_router
 from app.routers.health import router as health_router
+from app.routers.rules import router as rules_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -33,6 +34,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     api_router.include_router(collections_router)
     api_router.include_router(feeds_router)
     api_router.include_router(articles_router)
+    api_router.include_router(rules_router)
     app.include_router(api_router)
 
     # Deprecated: keep legacy routes temporarily while clients migrate.
@@ -41,6 +43,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(collections_router, include_in_schema=False)
     app.include_router(feeds_router, include_in_schema=False)
     app.include_router(articles_router, include_in_schema=False)
+    app.include_router(rules_router, include_in_schema=False)
     app.state.settings = resolved_settings
     return app
 
