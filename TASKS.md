@@ -105,13 +105,19 @@ Status: ✅ COMPLETE
 
 - [x] Rule CRUD endpoints
 
+### Matching Logic
+
+- [x] Keyword include/exclude matching utility (`app/rules/matcher.py`)
+  - Case-insensitive substring matching
+  - Include any-of logic
+  - Exclude wins over include
+  - 35 unit tests covering edge cases
+
 ### Workers
 
 - [ ] Rule execution task (`run_rule`)
 - [ ] Scheduling via `frequency_minutes`
-- [ ] Rule matching:
-  - include keywords
-  - exclude keywords
+- [ ] Rule matching integration:
   - collection scope
   - time window since `last_run_at`
 
