@@ -1,0 +1,132 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-2xl);
+  gap: var(--spacing-2xl);
+  background-color: var(--color-bg);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  width: 100%;
+  max-width: 400px;
+  padding: var(--spacing-3xl);
+  background-color: var(--color-card-bg);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgotLink {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+}
+
+.error {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #ff4444;
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-input-bg);
+}
+
+.dividerText {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.terms {
+  margin: 0;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.terms a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+.terms a:hover {
+  color: var(--color-text-secondary);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.footerText {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.footer a {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

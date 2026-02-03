@@ -1,0 +1,33 @@
+/* Design tokens from Pencil.ai design */
+:root {
+  /* Colors */
+  --color-bg: #000000;
+  --color-card-bg: #0a0a0a;
+  --color-input-bg: #1a1a1a;
+  --color-primary: #bfff00;
+  --color-primary-text: #000000;
+  --color-border: #333333;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #666666;
+  --color-text-muted: #404040;
+  --color-text-label: #999999;
+
+  /* Typography */
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-body: "JetBrains Mono", monospace;
+
+  /* Spacing */
+  --spacing-xs: 6px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 20px;
+  --spacing-xl: 28px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+
+  /* Border radius */
+  --radius-none: 0;
+
+  /* Input height */
+  --input-height: 48px;
+}
