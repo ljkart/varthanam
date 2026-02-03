@@ -18,9 +18,7 @@ export function HomePage() {
       <Logo />
       {user ? (
         <div className={styles.content}>
-          <h1 className={styles.title}>
-            Welcome, {user.full_name || user.email}!
-          </h1>
+          <h1 className={styles.title}>Welcome, {user.email}!</h1>
           <p className={styles.subtitle}>You are logged in.</p>
           <Button onClick={logout} variant="secondary">
             Sign Out

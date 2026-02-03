@@ -7,7 +7,6 @@ import styles from "./Auth.module.css";
 export function RegisterPage() {
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,7 +24,7 @@ export function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await api.register({ email, password, full_name: fullName || undefined });
+      await api.register({ email, password });
       navigate("/login", { state: { registered: true } });
     } catch (err) {
       const apiError = err as ApiError;
@@ -51,15 +50,6 @@ export function RegisterPage() {
           {error && <div className={styles.error}>{error}</div>}
 
           <div className={styles.fields}>
-            <Input
-              label="Full Name"
-              type="text"
-              placeholder="John Doe"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              autoComplete="name"
-            />
-
             <Input
               label="Email"
               type="email"

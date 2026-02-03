@@ -13,7 +13,6 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  full_name?: string;
 }
 
 export interface AuthResponse {
@@ -24,7 +23,6 @@ export interface AuthResponse {
 export interface User {
   id: number;
   email: string;
-  full_name: string | null;
   is_active: boolean;
   created_at: string;
 }

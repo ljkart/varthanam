@@ -36,7 +36,6 @@ describe("RegisterPage", () => {
     expect(
       screen.getByText("Start curating your personalized news feed"),
     ).toBeInTheDocument();
-    expect(screen.getByLabelText("Full Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(
@@ -53,15 +52,12 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(<RegisterPage />);
 
-    const nameInput = screen.getByLabelText("Full Name");
     const emailInput = screen.getByLabelText("Email");
     const passwordInput = screen.getByLabelText("Password");
 
-    await user.type(nameInput, "John Doe");
     await user.type(emailInput, "john@example.com");
     await user.type(passwordInput, "password123");
 
-    expect(nameInput).toHaveValue("John Doe");
     expect(emailInput).toHaveValue("john@example.com");
     expect(passwordInput).toHaveValue("password123");
   });
@@ -71,14 +67,12 @@ describe("RegisterPage", () => {
     vi.mocked(api.register).mockResolvedValueOnce({
       id: 1,
       email: "john@example.com",
-      full_name: "John Doe",
       is_active: true,
       created_at: "2024-01-01T00:00:00Z",
     });
 
     render(<RegisterPage />);
 
-    await user.type(screen.getByLabelText("Full Name"), "John Doe");
     await user.type(screen.getByLabelText("Email"), "john@example.com");
     await user.type(screen.getByLabelText("Password"), "password123");
     await user.click(screen.getByRole("button", { name: /create account/i }));
@@ -87,7 +81,6 @@ describe("RegisterPage", () => {
       expect(api.register).toHaveBeenCalledWith({
         email: "john@example.com",
         password: "password123",
-        full_name: "John Doe",
       });
     });
 
@@ -175,31 +168,5 @@ describe("RegisterPage", () => {
     expect(
       screen.getByRole("link", { name: /privacy policy/i }),
     ).toBeInTheDocument();
-  });
-
-  it("registers without full name when not provided", async () => {
-    const user = userEvent.setup();
-    vi.mocked(api.register).mockResolvedValueOnce({
-      id: 1,
-      email: "john@example.com",
-      full_name: null,
-      is_active: true,
-      created_at: "2024-01-01T00:00:00Z",
-    });
-
-    render(<RegisterPage />);
-
-    // Don't fill in name
-    await user.type(screen.getByLabelText("Email"), "john@example.com");
-    await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", { name: /create account/i }));
-
-    await waitFor(() => {
-      expect(api.register).toHaveBeenCalledWith({
-        email: "john@example.com",
-        password: "password123",
-        full_name: undefined,
-      });
-    });
   });
 });
