@@ -65,7 +65,7 @@ jobs:
         working-directory: backend
 
   frontend:
-    name: Frontend (Next.js)
+    name: Frontend (React + Vite)
     runs-on: ubuntu-latest
 
     steps:
@@ -101,6 +101,11 @@ jobs:
       - name: Lint
         if: steps.detect_frontend.outputs.present == 'true'
         run: npm run lint
+        working-directory: frontend
+
+      - name: Test
+        if: steps.detect_frontend.outputs.present == 'true'
+        run: npm run test:run
         working-directory: frontend
 
       - name: Build

@@ -133,18 +133,31 @@ Status: ✅ COMPLETE
 
 ---
 
-## Phase 5 — Frontend MVP (Next.js)
+## Phase 5 — Frontend MVP (React SPA + TypeScript)
+
+### Foundation
+
+- [x] React + Vite + TypeScript project setup
+- [x] Design tokens from Pencil.ai
+- [x] Reusable UI components (Input, Button, Logo)
+- [x] Typed API client (`src/lib/api.ts`)
+- [x] Auth helpers (`src/lib/auth.ts`)
+- [x] React Router configuration
 
 ### Core UI
 
-- [ ] Auth screens
+- [x] Auth screens (Login, Register)
+  - Matches Pencil.ai design exactly
+  - Form validation
+  - API integration
+  - Error handling
 - [ ] Collections UI
 - [ ] Feed management UI
 - [ ] Article list & detail (reader)
 - [ ] Read / save toggles
 - [ ] Rules UI + matches / digest view
 
-Status: ⏳ NOT STARTED
+Status: 🚧 IN PROGRESS
 
 ---
 
