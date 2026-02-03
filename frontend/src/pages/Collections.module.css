@@ -1,0 +1,112 @@
+/* Collections page styles based on Pencil.ai design */
+
+.page {
+  min-height: 100vh;
+  padding: 32px;
+  background-color: var(--color-bg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Collection list */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 800px;
+}
+
+/* Loading skeleton */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 800px;
+}
+
+.skeleton {
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    var(--color-card-bg) 0%,
+    var(--color-input-bg) 50%,
+    var(--color-card-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+  color: var(--color-text-muted);
+  background-color: var(--color-card-bg);
+  border-radius: 50%;
+}
+
+.emptyTitle {
+  margin: 0 0 8px 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.emptyDescription {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  max-width: 300px;
+}
+
+/* Error state */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.errorMessage {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #f87171;
+}
