@@ -1,0 +1,49 @@
+/* Textarea styles based on Pencil.ai design */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-input-bg);
+  border: 1px solid transparent;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.textarea.error {
+  border-color: #f87171;
+}
+
+.errorText {
+  font-size: 11px;
+  color: #f87171;
+}
