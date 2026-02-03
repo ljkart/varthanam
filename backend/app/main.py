@@ -1,6 +1,7 @@
 """FastAPI application entrypoint."""
 
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.errors import register_exception_handlers
 from app.core.logging import configure_logging
@@ -27,6 +28,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title=resolved_settings.app_name)
     register_exception_handlers(app)
+
+    # CORS middleware for frontend access
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     api_router = APIRouter(prefix="/api/v1")
     api_router.include_router(health_router)

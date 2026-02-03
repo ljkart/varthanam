@@ -98,7 +98,7 @@ TDD Gate:
 
 ---
 
-## Phase 5 — Frontend MVP (Next.js)
+## Phase 5 — Frontend MVP (React SPA + TypeScript)
 
 Deliverables:
 

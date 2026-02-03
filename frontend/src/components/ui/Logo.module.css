@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark {
+  background-color: var(--color-primary);
+}
+
+.text {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 3px;
+}
