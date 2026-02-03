@@ -15,6 +15,7 @@ export interface AssignToCollectionModalProps {
 
 /**
  * Modal for assigning a feed to a collection.
+ * Uses conditional rendering to reset state when modal reopens.
  */
 export function AssignToCollectionModal({
   isOpen,
@@ -24,10 +25,36 @@ export function AssignToCollectionModal({
   collections,
   isLoading = false,
 }: AssignToCollectionModalProps) {
+  if (!isOpen || !feed) return null;
+
+  return (
+    <AssignToCollectionModalContent
+      onClose={onClose}
+      onAssign={onAssign}
+      feed={feed}
+      collections={collections}
+      isLoading={isLoading}
+    />
+  );
+}
+
+interface AssignToCollectionModalContentProps {
+  onClose: () => void;
+  onAssign: (collectionId: number) => Promise<void>;
+  feed: Feed;
+  collections: Collection[];
+  isLoading?: boolean;
+}
+
+function AssignToCollectionModalContent({
+  onClose,
+  onAssign,
+  feed,
+  collections,
+  isLoading = false,
+}: AssignToCollectionModalContentProps) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [error, setError] = useState("");
-
-  if (!isOpen || !feed) return null;
 
   async function handleAssign() {
     if (!selectedId) {
