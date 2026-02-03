@@ -151,8 +151,21 @@ Status: ✅ COMPLETE
   - Form validation
   - API integration
   - Error handling
-- [ ] Collections UI
-- [ ] Feed management UI
+- [x] Collections UI
+  - Collections list page with CRUD operations
+  - Create/Edit collection modal
+  - Delete confirmation modal
+  - Loading/Empty/Error states
+  - Protected route (requires auth)
+  - Comprehensive test coverage (72 tests)
+- [x] Feed management UI
+  - Feeds page with add/assign operations
+  - Add Feed modal with URL validation
+  - Assign to Collection modal
+  - FeedRow component with status badges
+  - useFeeds hook for state management
+  - Protected route at /app/feeds
+  - Comprehensive test coverage (47 new tests)
 - [ ] Article list & detail (reader)
 - [ ] Read / save toggles
 - [ ] Rules UI + matches / digest view

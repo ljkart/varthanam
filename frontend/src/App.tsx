@@ -1,7 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { LoginPage, RegisterPage, HomePage, CollectionsPage } from "./pages";
+import {
+  LoginPage,
+  RegisterPage,
+  HomePage,
+  CollectionsPage,
+  FeedsPage,
+} from "./pages";
 
 function App() {
   return (
@@ -16,6 +22,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CollectionsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/feeds"
+            element={
+              <ProtectedRoute>
+                <FeedsPage />
               </ProtectedRoute>
             }
           />
