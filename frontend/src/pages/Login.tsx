@@ -22,7 +22,7 @@ export function LoginPage() {
     try {
       const response = await api.login({ email, password });
       login(response.access_token);
-      navigate("/");
+      navigate("/app");
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.detail || "Invalid email or password");
