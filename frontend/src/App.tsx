@@ -7,6 +7,9 @@ import {
   HomePage,
   CollectionsPage,
   FeedsPage,
+  DashboardPage,
+  ArticleReaderPage,
+  RulesPage,
 } from "./pages";
 
 function App() {
@@ -17,6 +20,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/app"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/app/collections"
             element={
@@ -30,6 +41,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <FeedsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/articles/:articleId"
+            element={
+              <ProtectedRoute>
+                <ArticleReaderPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/rules"
+            element={
+              <ProtectedRoute>
+                <RulesPage />
               </ProtectedRoute>
             }
           />

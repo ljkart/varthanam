@@ -85,7 +85,7 @@ describe("LoginPage", () => {
     });
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/");
+      expect(mockNavigate).toHaveBeenCalledWith("/app");
     });
   });
 

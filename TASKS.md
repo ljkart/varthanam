@@ -166,11 +166,28 @@ Status: ✅ COMPLETE
   - useFeeds hook for state management
   - Protected route at /app/feeds
   - Comprehensive test coverage (47 new tests)
-- [ ] Article list & detail (reader)
-- [ ] Read / save toggles
-- [ ] Rules UI + matches / digest view
+- [x] Article list & detail (reader)
+  - Dashboard page with sidebar navigation
+  - ArticleCard component with summary, author, time ago
+  - ArticleReader page for single article view
+  - useArticles hook with pagination and filtering
+  - Comprehensive test coverage (26 new tests)
+- [x] Read / save toggles
+  - Mark read/unread functionality
+  - Save/unsave functionality
+  - Filter by all/unread/saved
+  - Visual state indicators on ArticleCard
+- [x] Rules UI + matches / digest view
+  - RulesPage with CRUD operations
+  - RuleCard component with keywords display
+  - RuleModal for create/edit
+  - useRules hook for state management
+  - Toggle rule active/inactive
+  - Delete confirmation modal
+  - Collection scope selection
+  - Comprehensive test coverage (63 new tests)
 
-Status: 🚧 IN PROGRESS
+Status: ✅ COMPLETE
 
 ---
 
