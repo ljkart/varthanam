@@ -13,6 +13,16 @@ vi.mock("../hooks/useFeeds");
 vi.mock("../hooks/useCollections");
 vi.mock("../lib/collectionFeedsApi");
 
+// Mock useNavigate
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 const mockFeeds: Feed[] = [
   {
     id: 1,
@@ -42,6 +52,7 @@ const mockCollections: Collection[] = [
 describe("FeedsPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
 
     // Default mock implementations
     vi.mocked(useFeeds).mockReturnValue({
@@ -316,5 +327,20 @@ describe("FeedsPage", () => {
     expect(screen.getByText("LAST FETCHED")).toBeInTheDocument();
     expect(screen.getByText("STATUS")).toBeInTheDocument();
     expect(screen.getByText("ACTIONS")).toBeInTheDocument();
+  });
+
+  it("renders back button", () => {
+    render(<FeedsPage />);
+    expect(screen.getByRole("button", { name: /back/i })).toBeInTheDocument();
+  });
+
+  it("navigates to dashboard when back button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<FeedsPage />);
+
+    const backButton = screen.getByRole("button", { name: /back/i });
+    await user.click(backButton);
+
+    expect(mockNavigate).toHaveBeenCalledWith("/app");
   });
 });

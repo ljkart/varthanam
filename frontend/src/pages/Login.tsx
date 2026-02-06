@@ -11,6 +11,7 @@ export function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +68,16 @@ export function LoginPage() {
               autoComplete="current-password"
             />
 
-            <div className={styles.forgotRow}>
+            <div className={styles.optionsRow}>
+              <label className={styles.rememberLabel}>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className={styles.checkbox}
+                />
+                <span>Remember me</span>
+              </label>
               <Link to="/forgot-password" className={styles.forgotLink}>
                 Forgot password?
               </Link>

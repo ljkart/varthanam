@@ -1,14 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui";
-import { ArticleCard } from "../components/articles";
+import { ArticleCard, ArticleReaderPanel } from "../components/articles";
 import { useCollections } from "../hooks/useCollections";
 import { useArticles, type FilterType } from "../hooks/useArticles";
 import { useAuth } from "../lib/auth";
+import type { Article } from "../lib/articlesApi";
 import styles from "./Dashboard.module.css";
 
+export type ViewMode = "stacked" | "grid";
+
 /**
- * Main dashboard page with sidebar navigation and article grid.
+ * Main dashboard page with sidebar navigation, article list/grid, and slide-in reader.
  */
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -34,6 +37,9 @@ export function DashboardPage() {
   const [articleStates, setArticleStates] = useState<
     Record<number, { isRead: boolean; isSaved: boolean }>
   >({});
+  const [viewMode, setViewMode] = useState<ViewMode>("stacked");
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Derive the active collection ID - use selected or default to first
   const activeCollectionId =
@@ -71,15 +77,8 @@ export function DashboardPage() {
   }
 
   async function handleMarkRead(articleId: number) {
-    const current = articleStates[articleId];
-    const isRead = current?.isRead ?? false;
-
     try {
-      if (isRead) {
-        await markRead(articleId); // Toggle - but API doesn't have toggle, so this marks as read
-      } else {
-        await markRead(articleId);
-      }
+      await markRead(articleId);
       setArticleStates((prev) => ({
         ...prev,
         [articleId]: { ...prev[articleId], isRead: true },
@@ -108,8 +107,12 @@ export function DashboardPage() {
     }
   }
 
-  function handleArticleClick(articleId: number) {
-    navigate(`/app/articles/${articleId}`);
+  function handleArticleClick(article: Article) {
+    setSelectedArticle(article);
+  }
+
+  function handleCloseReader() {
+    setSelectedArticle(null);
   }
 
   function handleLogout() {
@@ -124,7 +127,9 @@ export function DashboardPage() {
   return (
     <div className={styles.page}>
       {/* Sidebar */}
-      <aside className={styles.sidebar}>
+      <aside
+        className={`${styles.sidebar} ${sidebarCollapsed ? styles.sidebarCollapsed : ""}`}
+      >
         <div className={styles.sidebarTop}>
           <div className={styles.logo}>
             <div className={styles.logoMark} />
@@ -239,15 +244,27 @@ export function DashboardPage() {
       <main className={styles.main}>
         {/* Top bar */}
         <div className={styles.topBar}>
-          <div className={styles.searchContainer}>
-            <SearchIcon className={styles.searchIcon} />
-            <span className={styles.searchPlaceholder}>
-              Search articles... (⌘K)
-            </span>
+          <div className={styles.topBarLeft}>
+            <button
+              type="button"
+              className={styles.sidebarToggle}
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              aria-label={
+                sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
+              }
+            >
+              <MenuIcon />
+            </button>
+            <div className={styles.searchContainer}>
+              <SearchIcon className={styles.searchIcon} />
+              <span className={styles.searchPlaceholder}>
+                Search articles... (⌘K)
+              </span>
+            </div>
           </div>
           <div className={styles.topBarRight}>
             <span className={styles.shortcutsHint}>
-              j/k navigate • s save • m mark read
+              j/k navigate · s save · m mark read
             </span>
           </div>
         </div>
@@ -265,11 +282,41 @@ export function DashboardPage() {
                 {filter === "saved" && " saved"}
               </p>
             </div>
+            <div className={styles.headerRight}>
+              <div
+                className={styles.viewToggleGroup}
+                role="group"
+                aria-label="View mode"
+              >
+                <button
+                  type="button"
+                  className={`${styles.viewToggle} ${viewMode === "stacked" ? styles.viewToggleActive : ""}`}
+                  onClick={() => setViewMode("stacked")}
+                  aria-label="List view"
+                  title="List view"
+                >
+                  <ListIcon />
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.viewToggle} ${viewMode === "grid" ? styles.viewToggleActive : ""}`}
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Grid view"
+                  title="Grid view"
+                >
+                  <LayoutGridIcon />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Loading state */}
           {isArticlesLoading && articles.length === 0 && (
-            <div className={styles.articlesGrid}>
+            <div
+              className={
+                viewMode === "grid" ? styles.articlesGrid : styles.articlesList
+              }
+            >
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className={styles.skeleton} />
               ))}
@@ -291,17 +338,24 @@ export function DashboardPage() {
             </div>
           )}
 
-          {/* Articles grid */}
+          {/* Articles */}
           {articles.length > 0 && (
             <>
-              <div className={styles.articlesGrid}>
+              <div
+                className={
+                  viewMode === "grid"
+                    ? styles.articlesGrid
+                    : styles.articlesList
+                }
+              >
                 {articles.map((article) => (
                   <ArticleCard
                     key={article.id}
                     article={article}
+                    variant={viewMode}
                     isRead={articleStates[article.id]?.isRead}
                     isSaved={articleStates[article.id]?.isSaved}
-                    onClick={() => handleArticleClick(article.id)}
+                    onClick={() => handleArticleClick(article)}
                     onMarkRead={() => handleMarkRead(article.id)}
                     onSave={() => handleSaveToggle(article.id)}
                   />
@@ -326,6 +380,29 @@ export function DashboardPage() {
           )}
         </div>
       </main>
+
+      {/* Slide-in reader overlay */}
+      {selectedArticle && (
+        <div
+          className={styles.readerOverlay}
+          onClick={handleCloseReader}
+          data-testid="reader-overlay"
+        >
+          <div
+            className={styles.readerPanel}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ArticleReaderPanel
+              article={selectedArticle}
+              isRead={articleStates[selectedArticle.id]?.isRead}
+              isSaved={articleStates[selectedArticle.id]?.isSaved}
+              onClose={handleCloseReader}
+              onMarkRead={() => handleMarkRead(selectedArticle.id)}
+              onSave={() => handleSaveToggle(selectedArticle.id)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -498,6 +575,67 @@ function RulesIcon() {
     >
       <path d="M12 20h9" />
       <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </svg>
+  );
+}
+
+function LayoutGridIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
+    </svg>
+  );
+}
+
+function ListIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="8" y1="6" x2="21" y2="6" />
+      <line x1="8" y1="12" x2="21" y2="12" />
+      <line x1="8" y1="18" x2="21" y2="18" />
+      <line x1="3" y1="6" x2="3.01" y2="6" />
+      <line x1="3" y1="12" x2="3.01" y2="12" />
+      <line x1="3" y1="18" x2="3.01" y2="18" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="18" x2="21" y2="18" />
     </svg>
   );
 }

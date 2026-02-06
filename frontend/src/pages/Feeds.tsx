@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui";
 import {
   AddFeedModal,
@@ -15,6 +16,7 @@ import styles from "./Feeds.module.css";
  * Feeds page - displays all user feeds with add and assign operations.
  */
 export function FeedsPage() {
+  const navigate = useNavigate();
   const { feeds, isLoading: isFeedsLoading, addFeed } = useFeeds();
   const { collections, isLoading: isCollectionsLoading } = useCollections();
 
@@ -53,10 +55,20 @@ export function FeedsPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h1 className={styles.title}>Manage Feeds</h1>
-          <p className={styles.subtitle}>
-            {feeds.length} feed{feeds.length !== 1 ? "s" : ""} connected
-          </p>
+          <button
+            type="button"
+            className={styles.backButton}
+            onClick={() => navigate("/app")}
+          >
+            <ArrowLeftIcon />
+            Back
+          </button>
+          <div className={styles.titleGroup}>
+            <h1 className={styles.title}>Manage Feeds</h1>
+            <p className={styles.subtitle}>
+              {feeds.length} feed{feeds.length !== 1 ? "s" : ""} connected
+            </p>
+          </div>
         </div>
         <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusIcon />}>
           Add Feed
@@ -144,6 +156,24 @@ export function FeedsPage() {
         isLoading={isSubmitting || isCollectionsLoading}
       />
     </div>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
   );
 }
 

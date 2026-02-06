@@ -148,4 +148,23 @@ describe("LoginPage", () => {
       screen.getByRole("button", { name: /continue with google/i }),
     ).toBeInTheDocument();
   });
+
+  it("renders remember me checkbox", () => {
+    render(<LoginPage />);
+    expect(screen.getByLabelText(/remember me/i)).toBeInTheDocument();
+  });
+
+  it("allows toggling remember me checkbox", async () => {
+    const user = userEvent.setup();
+    render(<LoginPage />);
+
+    const checkbox = screen.getByRole("checkbox");
+    expect(checkbox).not.toBeChecked();
+
+    await user.click(checkbox);
+    expect(checkbox).toBeChecked();
+
+    await user.click(checkbox);
+    expect(checkbox).not.toBeChecked();
+  });
 });
