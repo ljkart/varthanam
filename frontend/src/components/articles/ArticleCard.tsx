@@ -1,8 +1,16 @@
 import type { Article } from "../../lib/articlesApi";
+import {
+  extractImageFromHtml,
+  getPlaceholderGradient,
+  getPlaceholderLabel,
+} from "../../lib/articleImage";
 import styles from "./ArticleCard.module.css";
+
+export type ArticleCardVariant = "stacked" | "grid";
 
 export interface ArticleCardProps {
   article: Article;
+  variant?: ArticleCardVariant;
   isRead?: boolean;
   isSaved?: boolean;
   onClick?: () => void;
@@ -12,9 +20,11 @@ export interface ArticleCardProps {
 
 /**
  * Card component displaying an article preview.
+ * Supports "stacked" (horizontal list row) and "grid" (vertical card with image) variants.
  */
 export function ArticleCard({
   article,
+  variant = "stacked",
   isRead = false,
   isSaved = false,
   onClick,
@@ -24,6 +34,10 @@ export function ArticleCard({
   const timeAgo = article.published_at
     ? formatTimeAgo(new Date(article.published_at))
     : "Recently";
+
+  const articleImage = extractImageFromHtml(article.summary);
+  const gradient = getPlaceholderGradient(article.feed_id);
+  const label = getPlaceholderLabel(article.title);
 
   function handleActionClick(
     e: React.MouseEvent,
@@ -35,54 +49,103 @@ export function ArticleCard({
 
   return (
     <article
-      className={`${styles.card} ${isRead ? styles.read : ""}`}
+      className={`${styles.card} ${styles[variant]} ${isRead ? styles.read : ""}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick?.()}
     >
-      <div className={styles.source}>
-        <span className={styles.sourceIcon}>
-          <RssIcon />
-        </span>
-        <span className={styles.sourceName}>Feed</span>
-      </div>
-
-      <h3 className={styles.title}>{article.title}</h3>
-
-      {article.summary && (
-        <p className={styles.summary}>{stripHtml(article.summary)}</p>
+      {/* Grid: full-width image at top */}
+      {variant === "grid" && (
+        <div
+          className={styles.imageContainer}
+          style={
+            articleImage
+              ? { backgroundImage: `url(${articleImage})` }
+              : { background: gradient }
+          }
+          data-testid="article-image"
+        >
+          {!articleImage && (
+            <span className={styles.placeholderLabel}>{label}</span>
+          )}
+        </div>
       )}
 
-      <div className={styles.meta}>
-        <div className={styles.metaLeft}>
-          <span className={styles.time}>{timeAgo}</span>
-          {article.author && (
-            <span className={styles.author}>{article.author}</span>
+      <div className={styles.contentArea}>
+        <div className={styles.source}>
+          <span className={styles.sourceIcon}>
+            <RssIcon />
+          </span>
+          <span className={styles.sourceName}>Feed</span>
+          {variant === "grid" && (
+            <button
+              type="button"
+              className={`${styles.saveCorner} ${isSaved ? styles.saved : ""}`}
+              onClick={(e) => handleActionClick(e, onSave)}
+              aria-label={isSaved ? "Unsave" : "Save"}
+            >
+              <BookmarkIcon filled={isSaved} />
+            </button>
           )}
         </div>
 
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={`${styles.actionButton} ${isRead ? styles.active : ""}`}
-            onClick={(e) => handleActionClick(e, onMarkRead)}
-            aria-label={isRead ? "Mark as unread" : "Mark as read"}
-            title={isRead ? "Mark as unread" : "Mark as read"}
-          >
-            <CheckIcon />
-          </button>
-          <button
-            type="button"
-            className={`${styles.actionButton} ${isSaved ? styles.saved : ""}`}
-            onClick={(e) => handleActionClick(e, onSave)}
-            aria-label={isSaved ? "Unsave" : "Save"}
-            title={isSaved ? "Unsave" : "Save"}
-          >
-            <BookmarkIcon filled={isSaved} />
-          </button>
+        <h3 className={styles.title}>{article.title}</h3>
+
+        {variant === "stacked" && article.summary && (
+          <p className={styles.summary}>{stripHtml(article.summary)}</p>
+        )}
+
+        <div className={styles.meta}>
+          <div className={styles.metaLeft}>
+            {article.author && (
+              <span className={styles.author}>{article.author}</span>
+            )}
+            <span className={styles.dot}>·</span>
+            <span className={styles.time}>{timeAgo}</span>
+          </div>
+
+          {variant === "stacked" && (
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${isRead ? styles.active : ""}`}
+                onClick={(e) => handleActionClick(e, onMarkRead)}
+                aria-label={isRead ? "Mark as unread" : "Mark as read"}
+                title={isRead ? "Mark as unread" : "Mark as read"}
+              >
+                <CheckIcon />
+              </button>
+              <button
+                type="button"
+                className={`${styles.actionButton} ${isSaved ? styles.saved : ""}`}
+                onClick={(e) => handleActionClick(e, onSave)}
+                aria-label={isSaved ? "Unsave" : "Save"}
+                title={isSaved ? "Unsave" : "Save"}
+              >
+                <BookmarkIcon filled={isSaved} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Stacked: small thumbnail on right */}
+      {variant === "stacked" && (
+        <div
+          className={styles.thumbnail}
+          style={
+            articleImage
+              ? { backgroundImage: `url(${articleImage})` }
+              : { background: gradient }
+          }
+          data-testid="article-thumbnail"
+        >
+          {!articleImage && (
+            <span className={styles.placeholderLabelSmall}>{label}</span>
+          )}
+        </div>
+      )}
     </article>
   );
 }

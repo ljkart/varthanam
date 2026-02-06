@@ -8,6 +8,16 @@ vi.mock("../hooks/useCollections", () => ({
   useCollections: vi.fn(),
 }));
 
+// Mock useNavigate
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 import { useCollections } from "../hooks/useCollections";
 
 const mockCollections = [
@@ -37,6 +47,7 @@ describe("CollectionsPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
     vi.mocked(useCollections).mockReturnValue({
       collections: mockCollections,
       isLoading: false,
@@ -252,5 +263,50 @@ describe("CollectionsPage", () => {
     });
 
     expect(mockCreateCollection).not.toHaveBeenCalled();
+  });
+
+  it("renders back button", () => {
+    render(<CollectionsPage />);
+    expect(screen.getByRole("button", { name: /back/i })).toBeInTheDocument();
+  });
+
+  it("navigates to dashboard when back button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<CollectionsPage />);
+
+    const backButton = screen.getByRole("button", { name: /back/i });
+    await user.click(backButton);
+
+    expect(mockNavigate).toHaveBeenCalledWith("/app");
+  });
+
+  it("renders back button in loading state", () => {
+    vi.mocked(useCollections).mockReturnValue({
+      collections: [],
+      isLoading: true,
+      error: null,
+      refetch: mockRefetch,
+      createCollection: mockCreateCollection,
+      updateCollection: mockUpdateCollection,
+      deleteCollection: mockDeleteCollection,
+    });
+
+    render(<CollectionsPage />);
+    expect(screen.getByRole("button", { name: /back/i })).toBeInTheDocument();
+  });
+
+  it("renders back button in empty state", () => {
+    vi.mocked(useCollections).mockReturnValue({
+      collections: [],
+      isLoading: false,
+      error: null,
+      refetch: mockRefetch,
+      createCollection: mockCreateCollection,
+      updateCollection: mockUpdateCollection,
+      deleteCollection: mockDeleteCollection,
+    });
+
+    render(<CollectionsPage />);
+    expect(screen.getByRole("button", { name: /back/i })).toBeInTheDocument();
   });
 });

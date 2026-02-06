@@ -1,13 +1,9 @@
-/* ArticleCard styles based on Pencil.ai design */
+/* ArticleCard styles — stacked (default) + grid variants */
 
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  background-color: var(--color-card-bg);
   cursor: pointer;
   transition: background-color 0.2s ease;
+  background-color: var(--color-card-bg);
 }
 
 .card:hover {
@@ -18,10 +14,90 @@
   opacity: 0.6;
 }
 
+/* ── Stacked variant (horizontal row) ── */
+
+.stacked {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.stacked .contentArea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stacked .thumbnail {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.placeholderLabelSmall {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  user-select: none;
+}
+
+/* ── Grid variant (vertical card with image) ── */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.grid .imageContainer {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.grid .contentArea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px 16px;
+}
+
+.placeholderLabel {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  user-select: none;
+  letter-spacing: 2px;
+}
+
+/* ── Shared sub-elements ── */
+
 .source {
   display: flex;
   align-items: center;
   gap: 6px;
+  position: relative;
 }
 
 .sourceIcon {
@@ -40,6 +116,29 @@
   color: var(--color-primary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.saveCorner {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.saveCorner:hover {
+  color: var(--color-text-primary);
+}
+
+.saveCorner.saved {
+  color: var(--color-primary);
 }
 
 .title {
@@ -72,7 +171,7 @@
 .metaLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .time {
@@ -87,9 +186,10 @@
   color: var(--color-text-muted);
 }
 
-.author::before {
-  content: "•";
-  margin-right: 8px;
+.dot {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  line-height: 1;
 }
 
 .actions {

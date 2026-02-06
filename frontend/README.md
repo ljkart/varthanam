@@ -1,73 +1,233 @@
-# React + TypeScript + Vite
+# Varthanam Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, clean React SPA for personal news and content aggregation. Built with React 19, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Varthanam is a personal news aggregation platform that lets you take control of your information diet. Instead of opaque algorithms deciding what you see, you explicitly control your sources and define rules for content filtering.
 
-## React Compiler
+### Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **RSS Feed Aggregation** — Subscribe to any RSS feed and aggregate content in one place
+- **Collections** — Organize feeds into themed collections (e.g., "Tech News", "AI & ML")
+- **Smart Rules** — Create keyword-based rules to filter and surface relevant content
+- **Clean Reading Experience** — Distraction-free article reader with slide-in panel
+- **Article State** — Track read/unread status and save articles for later
+- **Dark Theme** — Modern dark UI with lime green accents
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Category   | Technology                     |
+| ---------- | ------------------------------ |
+| Framework  | React 19                       |
+| Language   | TypeScript 5.9                 |
+| Build Tool | Vite 7                         |
+| Routing    | React Router 7                 |
+| Testing    | Vitest + React Testing Library |
+| Styling    | CSS Modules + Design Tokens    |
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- Node.js 18+
+- npm 9+
+- Backend API running (see [backend README](../backend/README.md))
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/ljkart/varthanam.git
+cd varthanam/frontend
+
+# Install dependencies
+npm ci
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+### Environment
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+The frontend expects the backend API at `http://127.0.0.1:8000`. This is configured in `src/lib/api.ts`.
+
+## Project Structure
+
 ```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/              # Base components (Button, Input, Modal)
+│   ├── articles/        # Article card, reader panel
+│   ├── collections/     # Collection cards and modals
+│   ├── feeds/           # Feed management components
+│   └── rules/           # Rule cards and modals
+├── pages/               # Route page components
+│   ├── Home.tsx         # Landing page
+│   ├── Login.tsx        # Authentication
+│   ├── Register.tsx     # User registration
+│   ├── Dashboard.tsx    # Main app dashboard
+│   ├── Collections.tsx  # Collection management
+│   ├── Feeds.tsx        # Feed management
+│   └── Rules.tsx        # Rules management
+├── hooks/               # Custom React hooks
+│   ├── useArticles.ts   # Article fetching and state
+│   ├── useCollections.ts
+│   ├── useFeeds.ts
+│   └── useRules.ts
+├── lib/                 # Utilities and API clients
+│   ├── api.ts           # Base API configuration
+│   ├── auth.ts          # Authentication context
+│   ├── articlesApi.ts   # Articles API client
+│   └── ...
+├── styles/              # Global styles
+│   └── tokens.css       # Design tokens (colors, spacing)
+└── test/                # Test utilities
+    └── utils.tsx        # Custom render with providers
+```
+
+## Available Scripts
+
+| Command                 | Description                         |
+| ----------------------- | ----------------------------------- |
+| `npm run dev`           | Start development server with HMR   |
+| `npm run build`         | Type-check and build for production |
+| `npm run preview`       | Preview production build locally    |
+| `npm run lint`          | Run ESLint                          |
+| `npm run test`          | Run tests in watch mode             |
+| `npm run test:run`      | Run tests once                      |
+| `npm run test:coverage` | Run tests with coverage report      |
+
+## Testing
+
+Tests are written with Vitest and React Testing Library, following TDD practices.
+
+```bash
+# Run all tests
+npm run test:run
+
+# Run tests in watch mode
+npm run test
+
+# Run with coverage
+npm run test:coverage
+```
+
+### Test Structure
+
+- Component tests live next to their components (`*.test.tsx`)
+- Page tests live in `src/pages/`
+- Hook tests live in `src/hooks/`
+- Custom test utilities in `src/test/utils.tsx`
+
+**Current coverage: 294 tests passing**
+
+## Design System
+
+The UI follows a modern dark theme with the following design tokens:
+
+### Colors
+
+| Token                    | Value     | Usage                       |
+| ------------------------ | --------- | --------------------------- |
+| `--color-bg`             | `#000000` | Page background             |
+| `--color-card-bg`        | `#0a0a0a` | Card backgrounds            |
+| `--color-primary`        | `#bfff00` | Primary accent (lime green) |
+| `--color-text-primary`   | `#ffffff` | Primary text                |
+| `--color-text-secondary` | `#666666` | Secondary text              |
+
+### Typography
+
+- **Headings**: Inter (system-ui fallback)
+- **Body/Mono**: JetBrains Mono
+
+### Components
+
+All components use CSS Modules for scoped styling:
+
+```tsx
+import styles from './Button.module.css';
+
+<Button variant="primary">Click me</Button>
+<Button variant="secondary">Cancel</Button>
+```
+
+## Application Routes
+
+| Route               | Page             | Auth Required |
+| ------------------- | ---------------- | ------------- |
+| `/`                 | Landing page     | No            |
+| `/login`            | Login            | No            |
+| `/register`         | Registration     | No            |
+| `/app`              | Dashboard        | Yes           |
+| `/app/collections`  | Collections      | Yes           |
+| `/app/feeds`        | Feed management  | Yes           |
+| `/app/rules`        | Rules management | Yes           |
+| `/app/articles/:id` | Article reader   | Yes           |
+
+## Features in Detail
+
+### Dashboard
+
+The main dashboard provides:
+
+- **Sidebar navigation** with collapsible menu
+- **Filter tabs**: Today, Unread, Saved
+- **Collection switching**
+- **View modes**: Stacked list or grid view
+- **Slide-in article reader** with blur backdrop
+
+### Article Cards
+
+Articles display with:
+
+- Source icon and name
+- Title and summary (truncated)
+- Author and timestamp
+- Save/bookmark actions
+- Automatic image extraction from content
+
+### Rules Engine
+
+Create rules with:
+
+- Include/exclude keywords
+- Collection scope
+- Schedule frequency
+- Active/inactive toggle
+
+## API Integration
+
+The frontend communicates with a FastAPI backend. API clients are in `src/lib/`:
+
+```typescript
+// Example: Fetch articles
+import { articlesApi } from "./lib/articlesApi";
+
+const { articles, total } = await articlesApi.list(collectionId, {
+  filter: "unread",
+  limit: 20,
+  offset: 0,
+});
+```
+
+## Contributing
+
+1. Follow TDD: Write tests first, then implement
+2. Keep components small and focused
+3. Use TypeScript strictly (no `any`)
+4. Run lint and tests before committing:
+
+```bash
+npm run lint && npm run test:run
+```
+
+## License
+
+MIT
+
+---
+
+Built with clarity over cleverness. User control over algorithms.

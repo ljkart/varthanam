@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui";
 import {
   CollectionCard,
@@ -13,6 +14,7 @@ import styles from "./Collections.module.css";
  * Collections page - displays all user collections with CRUD operations.
  */
 export function CollectionsPage() {
+  const navigate = useNavigate();
   const {
     collections,
     isLoading,
@@ -65,7 +67,17 @@ export function CollectionsPage() {
     return (
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Collections</h1>
+          <div className={styles.headerLeft}>
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => navigate("/app")}
+            >
+              <ArrowLeftIcon />
+              Back
+            </button>
+            <h1 className={styles.title}>Collections</h1>
+          </div>
         </div>
         <div className={styles.skeletonList}>
           {[1, 2, 3].map((i) => (
@@ -81,7 +93,17 @@ export function CollectionsPage() {
     return (
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Collections</h1>
+          <div className={styles.headerLeft}>
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => navigate("/app")}
+            >
+              <ArrowLeftIcon />
+              Back
+            </button>
+            <h1 className={styles.title}>Collections</h1>
+          </div>
         </div>
         <div className={styles.errorState}>
           <p className={styles.errorMessage}>{error}</p>
@@ -98,7 +120,17 @@ export function CollectionsPage() {
     return (
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Collections</h1>
+          <div className={styles.headerLeft}>
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => navigate("/app")}
+            >
+              <ArrowLeftIcon />
+              Back
+            </button>
+            <h1 className={styles.title}>Collections</h1>
+          </div>
         </div>
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
@@ -130,7 +162,17 @@ export function CollectionsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Collections</h1>
+        <div className={styles.headerLeft}>
+          <button
+            type="button"
+            className={styles.backButton}
+            onClick={() => navigate("/app")}
+          >
+            <ArrowLeftIcon />
+            Back
+          </button>
+          <h1 className={styles.title}>Collections</h1>
+        </div>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
           leftIcon={<PlusIcon />}
@@ -178,6 +220,24 @@ export function CollectionsPage() {
         />
       )}
     </div>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
   );
 }
 

@@ -23,7 +23,13 @@ describe("ArticleCard", () => {
     expect(screen.getByText("Test Article Title")).toBeInTheDocument();
   });
 
-  it("renders article summary", () => {
+  it("defaults to stacked variant", () => {
+    const { container } = render(<ArticleCard article={mockArticle} />);
+
+    expect((container.firstChild as HTMLElement)?.className).toMatch(/stacked/);
+  });
+
+  it("renders article summary in stacked variant", () => {
     render(<ArticleCard article={mockArticle} />);
 
     expect(
@@ -40,7 +46,6 @@ describe("ArticleCard", () => {
   it("renders time ago", () => {
     render(<ArticleCard article={mockArticle} />);
 
-    // Should show some time indicator
     expect(screen.getByText(/ago|Just now/i)).toBeInTheDocument();
   });
 
@@ -49,7 +54,6 @@ describe("ArticleCard", () => {
     const onClick = vi.fn();
     render(<ArticleCard article={mockArticle} onClick={onClick} />);
 
-    // Click on the article title to trigger the card's onClick
     await user.click(screen.getByText("Test Article Title"));
 
     expect(onClick).toHaveBeenCalled();
@@ -68,7 +72,7 @@ describe("ArticleCard", () => {
     expect(onMarkRead).toHaveBeenCalled();
   });
 
-  it("calls onSave when save button is clicked", async () => {
+  it("calls onSave when save button is clicked in stacked variant", async () => {
     const user = userEvent.setup();
     const onSave = vi.fn();
     render(<ArticleCard article={mockArticle} onSave={onSave} />);
@@ -84,7 +88,6 @@ describe("ArticleCard", () => {
       <ArticleCard article={mockArticle} isRead={true} />,
     );
 
-    // CSS modules add prefixes, so check for partial class name
     expect((container.firstChild as HTMLElement)?.className).toMatch(/read/);
   });
 
@@ -92,7 +95,6 @@ describe("ArticleCard", () => {
     render(<ArticleCard article={mockArticle} isSaved={true} />);
 
     const saveButton = screen.getByRole("button", { name: /unsave/i });
-    // CSS modules add prefixes, so check for partial class name
     expect(saveButton.className).toMatch(/saved/);
   });
 
@@ -132,5 +134,92 @@ describe("ArticleCard", () => {
 
     expect(onSave).toHaveBeenCalled();
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  // ── Stacked variant ──
+
+  it("shows thumbnail in stacked variant", () => {
+    render(<ArticleCard article={mockArticle} variant="stacked" />);
+
+    expect(screen.getByTestId("article-thumbnail")).toBeInTheDocument();
+  });
+
+  it("does not show full image in stacked variant", () => {
+    render(<ArticleCard article={mockArticle} variant="stacked" />);
+
+    expect(screen.queryByTestId("article-image")).not.toBeInTheDocument();
+  });
+
+  it("shows mark-read and save action buttons in stacked variant", () => {
+    render(<ArticleCard article={mockArticle} variant="stacked" />);
+
+    expect(
+      screen.getByRole("button", { name: /mark as read/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+  });
+
+  // ── Grid variant ──
+
+  it("applies grid class when variant is grid", () => {
+    const { container } = render(
+      <ArticleCard article={mockArticle} variant="grid" />,
+    );
+
+    expect((container.firstChild as HTMLElement)?.className).toMatch(/grid/);
+  });
+
+  it("shows full image in grid variant", () => {
+    render(<ArticleCard article={mockArticle} variant="grid" />);
+
+    expect(screen.getByTestId("article-image")).toBeInTheDocument();
+  });
+
+  it("does not show thumbnail in grid variant", () => {
+    render(<ArticleCard article={mockArticle} variant="grid" />);
+
+    expect(screen.queryByTestId("article-thumbnail")).not.toBeInTheDocument();
+  });
+
+  it("does not show summary in grid variant", () => {
+    render(<ArticleCard article={mockArticle} variant="grid" />);
+
+    expect(
+      screen.queryByText(/This is a test article summary/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows save button in grid variant corner", () => {
+    render(<ArticleCard article={mockArticle} variant="grid" />);
+
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+  });
+
+  it("does not show mark-read button in grid variant", () => {
+    render(<ArticleCard article={mockArticle} variant="grid" />);
+
+    expect(
+      screen.queryByRole("button", { name: /mark as read/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows placeholder initials from title", () => {
+    render(<ArticleCard article={mockArticle} variant="stacked" />);
+
+    // "Test Article Title" → "TA"
+    expect(screen.getByText("TA")).toBeInTheDocument();
+  });
+
+  it("calls onSave from grid variant corner button", async () => {
+    const user = userEvent.setup();
+    const onSave = vi.fn();
+    render(
+      <ArticleCard article={mockArticle} variant="grid" onSave={onSave} />,
+    );
+
+    const saveButton = screen.getByRole("button", { name: /save/i });
+    await user.click(saveButton);
+
+    expect(onSave).toHaveBeenCalled();
   });
 });
